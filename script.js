@@ -35,16 +35,30 @@ searchBtn.textContent = 'Search';
 searchBtn.classList.add('text-center')
 searchEl.appendChild(searchBtn);
 
+//function to search information 
+// incomplete
+var searchHandler = function(event) {
+    event.preventDefault();
+    console.log('you clicked search button');
+
+    var citySearch = searchInput.value.trim();
+
+    if (citySearch){
+        getCityInfo(citySearch); 
+
+        searchEl.textContent = '';
+        searchInput.value = '';
+    } else {
+        alert('Please enter a valid city.');
+    }
+}
+
+
+// create an add event listener for search button
+searchBtn.addEventListener('click', searchHandler);
 
 
 
-
-
-
-//create a search button
-    // add classes to buttons
-//create 5 day forecast div
-    // col-10 for section
 
 // create 5 divs inside the forecast div  
 
