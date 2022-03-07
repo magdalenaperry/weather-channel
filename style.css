@@ -2,3 +2,10 @@ html *{
     padding: 0px;
     margin: 0px;
 }
+
+
+.padding{
+    outline: auto;
+    padding-bottom:100px;
+    padding-right: 50px;
+}

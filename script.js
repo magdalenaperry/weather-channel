@@ -1,6 +1,9 @@
-
 containerEl = document.querySelector('container')
 containerEl.classList.add('row');
+
+var API = 'dbadba3b6a415a81ba40263bf08007ee';
+var openCallWeatherUrl = 'https://api.openweathermap.org/data/2.5/onecall?';
+var geoCodeWeatherUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=';
 
 // header create
 var header = document.createElement('header');
@@ -17,7 +20,17 @@ containerEl.appendChild(asideEl);
 var mainEl = document.createElement('main');
 mainEl.classList.add('testclass', 'col-9', 'h3', 'mt-5', 'mb-5');
 containerEl.appendChild(mainEl);
-mainEl.textContent = '5 Day Forecast';
+
+var currentWeatherEl = document.createElement('div')
+currentWeatherEl.classList.add('padding');
+mainEl.appendChild(currentWeatherEl);
+currentWeatherEl.textContent = 'Current Weather';
+
+// create div within 5 day forecast
+var fiveDayForecastEl = document.createElement('div');
+fiveDayForecastEl.classList.add('0');
+mainEl.appendChild(fiveDayForecastEl);
+fiveDayForecastEl.textContent = '5 Day Weather Forecast';
 
 // search input and button
 var searchEl = document.createElement('div');
@@ -35,43 +48,150 @@ searchBtn.textContent = 'Search';
 searchBtn.classList.add('text-center')
 searchEl.appendChild(searchBtn);
 
-//function to search information 
-// incomplete
-var searchHandler = function(event) {
+// function to search information 
+
+var searchHandler = function (event) {
     event.preventDefault();
     console.log('you clicked search button');
 
+    // removes white space .trim()
     var citySearch = searchInput.value.trim();
 
-    if (citySearch){
-        getCityInfo(citySearch); 
+    console.log(citySearch);
 
+    if (citySearch) {
+        getCityInfoByName(citySearch);
         searchEl.textContent = '';
-        searchInput.value = '';
+        searchInput.value = citySearch;
     } else {
         alert('Please enter a valid city.');
     }
-}
+
+    // keep the search button to stay on after initial search;
+};
+
+
+// function to access API within the search button function for a city with lats/lons
+var getCityInfoByName = function (city) {
+    // var apiUrl =
+    var cityRequestUrl = geoCodeWeatherUrl + city + '&appid=' + API;
+
+    fetch(cityRequestUrl)
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(function (data) {
+                    displayWeather(data, city);
+                });
+            } else {
+                alert('Error: ' + response.statusText);
+            }
+        })
+        .catch(function (error) {
+            alert('Unable to find data for this city');
+        });
+
+    // console.log(cityRequestUrl);
+};
+
+var displayWeather = function (weatherData, searchTerm) {
+    if (weatherData.length === 0) {
+        mainEl.textContent = 'No data found';
+        return;
+    }
+
+    var lat = weatherData[0].lat
+    var lon = weatherData[0].lon
+
+    // fetch information by coordinates
+    var coordinateRequestUrl = openCallWeatherUrl + 'lat=' + lat + '&lon=' + lon + '&appid=' + API + '&units=imperial';
+    // console.log(coordinateRequestUrl);
+
+    fetch(coordinateRequestUrl)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+
+            // console.log(data.current.temp);
+            // adds temperature to current weather
+            var temp = document.createElement('div');
+            temp.classList.add('test');
+            currentWeatherEl.appendChild(temp);
+            temp.textContent = 'Temp: ' + data.current.temp;
+            // adds wind speed to current weather
+            var wind = document.createElement('div');
+            wind.classList.add('test');
+            currentWeatherEl.appendChild(wind);
+            wind.textContent = 'Wind: ' + data.current.wind_speed + 'mph';
+            // adds humidity to current weather
+            var humidity = document.createElement('div');
+            humidity.classList.add('test');
+            currentWeatherEl.appendChild(humidity);
+            humidity.textContent = 'Humidity: ' + data.current.humidity;
+            // adds uvi index to current weather
+            var uvi = document.createElement('div');
+            uvi.classList.add('test');
+            currentWeatherEl.appendChild(uvi);
+            uvi.textContent = 'UV index: ' + data.current.uvi;
+
+
+
+            console.log(data.daily[0])
+            // loop through moment dt
+            
+            
+
+
+
+
+           
+
+
+
+
+
+
+
+
+
+
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+
+
+
+    // console.log(coordinateRequestUrl);
+
+
+
+    return;
+};
+
+
+// // fetch information by coordinates
+// var coordinateRequestUrl = openCallWeatherUrl + 'lat=' + latitude + '&lon=' + longitude + '&appid=' + API + '&units=imperial'; 
+// console.log(coordinateRequestUrl);
+
+// fetch(coordinateRequestUrl)
+//     .then(function (response) {
+//         return response.json();
+//     })
+//     .then(function (data) {
+//         console.log(data);
+//     })
+//     .catch(function (err) {
+//         console.log(err);
+//     });
+
+
+
+// start screen loads local storage to show previous searches
+
+
+// add search history to initial screen
 
 
 // create an add event listener for search button
 searchBtn.addEventListener('click', searchHandler);
-
-
-
-
-// create 5 divs inside the forecast div  
-
-//fetch API
-var requestURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=41.878113&lon=-87.629799&appid=8a4f71946c01452c9735df61812f9851& units=imperial';
-
-fetch(requestURL)
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (data) {
-        console.log(data);
-    })
-    .catch(function (err) {
-        console.log(err);
-    });
