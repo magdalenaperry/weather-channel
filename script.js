@@ -117,7 +117,7 @@ var displayWeather = function (weatherData, searchTerm) {
             var temp = document.createElement('div');
             temp.classList.add('test');
             currentWeatherEl.appendChild(temp);
-            temp.textContent = 'Temp: ' + data.current.temp;
+            temp.textContent = 'Temp: ' + data.current.temp + 'F';
             // adds wind speed to current weather
             var wind = document.createElement('div');
             wind.classList.add('test');
@@ -127,7 +127,7 @@ var displayWeather = function (weatherData, searchTerm) {
             var humidity = document.createElement('div');
             humidity.classList.add('test');
             currentWeatherEl.appendChild(humidity);
-            humidity.textContent = 'Humidity: ' + data.current.humidity;
+            humidity.textContent = 'Humidity: ' + data.current.humidity + '%';
             // adds uvi index to current weather
             var uvi = document.createElement('div');
             uvi.classList.add('test');
@@ -136,55 +136,49 @@ var displayWeather = function (weatherData, searchTerm) {
 
 
 
-            console.log(data.daily[0])
-            // loop through moment dt
-            
-            
+            for (let i = 0; i < 5; i++) {
+
+                // date changed to momentum
+                // console.log(data.daily[i].dt);
+                var dtUnixFormatting = moment.unix(data.daily[i].dt).format('MM DD, YYYY');
+                // console.log(dtUnixFormatting);
+                var tempDay = data.daily[i].temp.day;
+                var windSpeed = data.daily[i].wind_speed;
+                var humidity = data.daily[i].humidity;
+                var weatherIcon = data.daily[i].weather.id;
 
 
+                var dateEl = document.createElement('div');
+                dateEl.classList.add('test');
+                fiveDayForecastEl.appendChild(dateEl);
+                dateEl.textContent = dtUnixFormatting;
+
+                var tempEl = document.createElement('p');
+                tempEl.classList.add('test');
+                dateEl.appendChild(tempEl);
+                tempEl.textContent = 'Temp ' + tempDay;
+
+                var windSpeedEl = document.createElement('p');
+                windSpeedEl.classList.add('test');
+                dateEl.appendChild(windSpeedEl);
+                windSpeedEl.textContent = windSpeed + ' mph';
+
+                var humidityEl = document.createElement('p');
+                humidityEl.classList.add('test');
+                dateEl.appendChild(humidityEl);
+                humidityEl.textContent = humidity + '%';
+            }
 
 
-           
+            // icons? 
 
-
-
-
-
-
-
-
-
-
+            // local storage?
         })
         .catch(function (err) {
             console.log(err);
         });
-
-
-
-    // console.log(coordinateRequestUrl);
-
-
-
     return;
 };
-
-
-// // fetch information by coordinates
-// var coordinateRequestUrl = openCallWeatherUrl + 'lat=' + latitude + '&lon=' + longitude + '&appid=' + API + '&units=imperial'; 
-// console.log(coordinateRequestUrl);
-
-// fetch(coordinateRequestUrl)
-//     .then(function (response) {
-//         return response.json();
-//     })
-//     .then(function (data) {
-//         console.log(data);
-//     })
-//     .catch(function (err) {
-//         console.log(err);
-//     });
-
 
 
 // start screen loads local storage to show previous searches
