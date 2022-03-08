@@ -3,9 +3,44 @@ html *{
     margin: 0px;
 }
 
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-.padding{
-    outline: auto;
-    padding-bottom:100px;
-    padding-right: 50px;
+header {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-variant: small-caps;
+}
+
+h2{
+    font-variant: small-caps;
+    padding-top: 50px;
+}
+
+.list-group-item:hover{
+    background-color: lightgrey;
+}
+
+.margin-main {
+    margin-left: 50px;
+}
+
+p {
+    line-height: 20px;
+    font-size: 20px;
+}
+
+h3{
+    font-size: 20px;
+}
+
+.card-body {
+    display: inline-block;
+    background-color: lightgrey;
+    border-radius: 8px;
+}
+
+
+.btnUVI {
+    font-size: 24px;
 }

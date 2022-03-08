@@ -7,45 +7,45 @@ var geoCodeWeatherUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=';
 
 // header create
 var header = document.createElement('header');
-header.classList.add('col-12', 'display-3', 'text-center', 'pt-4', 'pb-4', 'bg-primary', 'text-light');
+header.classList.add('col-12', 'display-1', 'text-center', 'py-5', 'bg-secondary', 'text-light');
 containerEl.appendChild(header);
-header.textContent = 'Weather Dashboard';
+header.textContent = "how is the weather up there?";
 
 // aside semantic div
 var asideEl = document.createElement('aside');
-asideEl.classList.add('testclass1', 'col-3', 'h4', 'pt-5', 'pb-5');
+asideEl.classList.add('col-3', 'h5', 'py-5');
 containerEl.appendChild(asideEl);
 
 // create main body
 var mainEl = document.createElement('main');
-mainEl.classList.add('testclass', 'col-9', 'h3', 'mt-5', 'mb-5');
+mainEl.classList.add('col-8', 'margin-main');
 containerEl.appendChild(mainEl);
 
 var currentWeatherEl = document.createElement('div')
-currentWeatherEl.classList.add('padding');
+currentWeatherEl.classList.add('title', 'col-12','py-5', 'h2');
 mainEl.appendChild(currentWeatherEl);
-currentWeatherEl.textContent = 'Current Weather';
 
-// 5 day forecast div 
+
 var fiveDayForecastEl = document.createElement('div');
-fiveDayForecastEl.classList.add('0');
+fiveDayForecastEl.classList.add('col-12', 'h3');
+fiveDayForecastEl.style.width = '8-rem;'
 mainEl.appendChild(fiveDayForecastEl);
-fiveDayForecastEl.textContent = '5 Day Weather Forecast';
 
 // search input and button
 var searchEl = document.createElement('div');
 searchEl.textContent = 'Search for a City:'
-searchEl.classList.add('ms-4')
+searchEl.classList.add('ms-4', 'mb-5')
 asideEl.appendChild(searchEl);
 
 var searchInput = document.createElement('input');
-searchInput.classList.add('testclass2');
-searchInput.placeholder = 'Charlotte, NC'
+searchInput.classList.add('col-12', 'mb-3', 'py-2');
+searchInput.placeholder = 'City'
 searchEl.appendChild(searchInput);
 
 var searchBtn = document.createElement('button');
 searchBtn.textContent = 'Search';
-searchBtn.classList.add('text-center')
+searchBtn.classList.add('col-12','btn', 'btn-lg', 'btn-outline-secondary', 'px-5')
+searchBtn.type = 'button'
 searchEl.appendChild(searchBtn);
 
 // local storage
@@ -56,21 +56,14 @@ var city = localStorage.getItem('city')
 if (city) {
     displayHistory = JSON.parse(city);
     console.log(displayHistory);
-    
 
     for (let i = 0; i < displayHistory.length; i++) {
-        var cityLocalEl = document.createElement('button');
-        cityLocalEl.classList.add('test');
+        var cityLocalEl = document.createElement('li');
+        cityLocalEl.classList.add('col-11','list-group-item', 'ms-4');
         cityLocalEl.textContent = displayHistory[i];
         asideEl.appendChild(cityLocalEl);
     }
-    
 }
-
-
-
-
-
 
 // function to search information 
 var searchHandler = function (event) {
@@ -98,7 +91,6 @@ var searchHandler = function (event) {
     }
 };
 
-
 // function to access API within the search button function for a city with lats/lons
 var getCityInfoByName = function (city) {
     // var apiUrl =
@@ -113,6 +105,8 @@ var getCityInfoByName = function (city) {
             } else {
                 alert('Error: ' + response.statusText);
             }
+
+
         })
         .catch(function (error) {
             alert('Unable to find data for this city');
@@ -125,13 +119,11 @@ var displayWeather = function (weatherData, searchTerm) {
         mainEl.textContent = 'No data found';
         return;
     }
-
     var lat = weatherData[0].lat
     var lon = weatherData[0].lon
 
     // fetch information by coordinates
     var coordinateRequestUrl = openCallWeatherUrl + 'lat=' + lat + '&lon=' + lon + '&appid=' + API + '&units=imperial';
-    // console.log(coordinateRequestUrl);
 
     fetch(coordinateRequestUrl)
         .then(function (response) {
@@ -139,61 +131,86 @@ var displayWeather = function (weatherData, searchTerm) {
         })
         .then(function (data) {
 
-            // console.log(data.current.temp);
+            // clears out previous search requests
+            currentWeatherEl.innerHTML = '';
+            fiveDayForecastEl.innerHTML = '';
+
+            var cityName = searchTerm;
+            console.log(cityName);
+            var printCity = document.createElement('h2');
+            printCity.classList.add('test');
+            currentWeatherEl.appendChild(printCity);
+            printCity.textContent = 'weather for: ' + cityName;
+
             // adds temperature to current weather
-            var temp = document.createElement('div');
-            temp.classList.add('test');
+            var temp = document.createElement('p');
+            temp.classList.add('h4', 'py-3', 'px-4');
             currentWeatherEl.appendChild(temp);
-            temp.textContent = 'Temp: ' + data.current.temp + 'F';
+            temp.textContent = 'Temp: ' + data.current.temp + ' F';
+
             // adds wind speed to current weather
-            var wind = document.createElement('div');
-            wind.classList.add('test');
+            var wind = document.createElement('p');
+            wind.classList.add('h4', 'pb-3', 'px-4');
             currentWeatherEl.appendChild(wind);
-            wind.textContent = 'Wind: ' + data.current.wind_speed + 'mph';
+            wind.textContent = 'Wind: ' + data.current.wind_speed + ' mph';
+
             // adds humidity to current weather
-            var humidity = document.createElement('div');
-            humidity.classList.add('test');
+            var humidity = document.createElement('p');
+            humidity.classList.add('h4', 'pb-3', 'px-4');
             currentWeatherEl.appendChild(humidity);
             humidity.textContent = 'Humidity: ' + data.current.humidity + '%';
+
             // adds uvi index to current weather
-            var uvi = document.createElement('div');
-            uvi.classList.add('test');
+            var uvi = document.createElement('button');
+            uvi.classList.add('btnUVI', 'py-2', 'mx-4','btn', 'btn-warning');
             currentWeatherEl.appendChild(uvi);
-            uvi.textContent = 'UV index: ' + data.current.uvi;
-
-
+            uvi.textContent = 'UVI: ' + data.current.uvi;
 
             for (let i = 0; i < 5; i++) {
 
                 // date changed to momentum
-                // console.log(data.daily[i].dt);
-                var dtUnixFormatting = moment.unix(data.daily[i].dt).format('MM DD, YYYY');
-                // console.log(dtUnixFormatting);
+                var dtUnixFormatting = moment.unix(data.daily[i].dt).format('MMMM Do, YYYY');
                 var tempDay = data.daily[i].temp.day;
                 var windSpeed = data.daily[i].wind_speed;
                 var humidity = data.daily[i].humidity;
-                var weatherIcon = data.daily[i].weather.id;
-                console.log(data.daily[i].weather[0].id)
+                var weatherIcon = data.daily[i].weather[0].icon;
+                var weatherDescription = data.daily[i].weather[0].description
+                var iconSource = 'https://openweathermap.org/img/wn/' + weatherIcon + '@2x.png'
+                // console.log(data.daily[i].weather[0].icon)
+                // console.log(iconSource);
 
-                var dateEl = document.createElement('div');
-                dateEl.classList.add('test');
-                fiveDayForecastEl.appendChild(dateEl);
+                var card = document.createElement('div');
+                card.classList.add('card-body', 'm-3')
+                fiveDayForecastEl.appendChild(card);
+                console.log(card)
+
+                var dateEl = document.createElement('h5');
+                dateEl.classList.add('card-text');
+                card.appendChild(dateEl);
                 dateEl.textContent = dtUnixFormatting;
 
+                var iconEl = document.createElement('img');
+                iconEl.src = iconSource;
+                iconEl.alt = weatherDescription;
+                iconEl.title = weatherDescription;
+                iconEl.classList.add('d-block')
+                card.appendChild(iconEl);
+
+
                 var tempEl = document.createElement('p');
-                tempEl.classList.add('test');
-                dateEl.appendChild(tempEl);
-                tempEl.textContent = 'Temp ' + tempDay;
+                tempEl.classList.add('card-text', 'lh-lg');
+                card.appendChild(tempEl);
+                tempEl.textContent = 'Temp: ' + tempDay;
 
                 var windSpeedEl = document.createElement('p');
-                windSpeedEl.classList.add('test');
-                dateEl.appendChild(windSpeedEl);
-                windSpeedEl.textContent = windSpeed + ' mph';
+                windSpeedEl.classList.add('card-text', 'lh-lg');
+                card.appendChild(windSpeedEl);
+                windSpeedEl.textContent = 'Wind: '+ windSpeed + ' mph';
 
                 var humidityEl = document.createElement('p');
-                humidityEl.classList.add('test');
-                dateEl.appendChild(humidityEl);
-                humidityEl.textContent = humidity + '%';
+                humidityEl.classList.add('card-text', 'lh-lg');
+                card.appendChild(humidityEl);
+                humidityEl.textContent = 'Humidity: ' + humidity + '%';
             }
             // icons? 
         })
@@ -203,16 +220,5 @@ var displayWeather = function (weatherData, searchTerm) {
     return;
 };
 
-
-// local storage?
-
-// keep the search button to stay on after initial search;
-
-// start screen loads local storage to show previous searches
-
-
-// add search history to initial screen
-
-
-// create an add event listener for search button
+// add event listener for search button
 searchBtn.addEventListener('click', searchHandler);
