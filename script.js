@@ -26,7 +26,7 @@ currentWeatherEl.classList.add('padding');
 mainEl.appendChild(currentWeatherEl);
 currentWeatherEl.textContent = 'Current Weather';
 
-// create div within 5 day forecast
+// 5 day forecast div 
 var fiveDayForecastEl = document.createElement('div');
 fiveDayForecastEl.classList.add('0');
 mainEl.appendChild(fiveDayForecastEl);
@@ -48,26 +48,54 @@ searchBtn.textContent = 'Search';
 searchBtn.classList.add('text-center')
 searchEl.appendChild(searchBtn);
 
-// function to search information 
+// local storage
+var displayHistory = [];
 
+// local storage check for cities input with key 'city' in string
+var city = localStorage.getItem('city')
+if (city) {
+    displayHistory = JSON.parse(city);
+    console.log(displayHistory);
+    
+
+    for (let i = 0; i < displayHistory.length; i++) {
+        var cityLocalEl = document.createElement('button');
+        cityLocalEl.classList.add('test');
+        cityLocalEl.textContent = displayHistory[i];
+        asideEl.appendChild(cityLocalEl);
+    }
+    
+}
+
+
+
+
+
+
+// function to search information 
 var searchHandler = function (event) {
     event.preventDefault();
-    console.log('you clicked search button');
-
+    // console.log('you clicked search button');
     // removes white space .trim()
     var citySearch = searchInput.value.trim();
-
-    console.log(citySearch);
-
     if (citySearch) {
         getCityInfoByName(citySearch);
-        searchEl.textContent = '';
         searchInput.value = citySearch;
+        searchInput.value = '';
+
+        var duplicateCities = false;
+        for (let i = 0; i < displayHistory.length; i++) {
+            if (displayHistory[i] === citySearch){
+                duplicateCities = true;
+            }
+        }
+        if(!duplicateCities){
+            displayHistory.push(citySearch);
+        }
+        localStorage.setItem('city', JSON.stringify(displayHistory));
     } else {
         alert('Please enter a valid city.');
     }
-
-    // keep the search button to stay on after initial search;
 };
 
 
@@ -90,9 +118,8 @@ var getCityInfoByName = function (city) {
             alert('Unable to find data for this city');
         });
 
-    // console.log(cityRequestUrl);
 };
-
+// connect the city name API to lat/l
 var displayWeather = function (weatherData, searchTerm) {
     if (weatherData.length === 0) {
         mainEl.textContent = 'No data found';
@@ -146,7 +173,7 @@ var displayWeather = function (weatherData, searchTerm) {
                 var windSpeed = data.daily[i].wind_speed;
                 var humidity = data.daily[i].humidity;
                 var weatherIcon = data.daily[i].weather.id;
-
+                console.log(data.daily[i].weather[0].id)
 
                 var dateEl = document.createElement('div');
                 dateEl.classList.add('test');
@@ -168,11 +195,7 @@ var displayWeather = function (weatherData, searchTerm) {
                 dateEl.appendChild(humidityEl);
                 humidityEl.textContent = humidity + '%';
             }
-
-
             // icons? 
-
-            // local storage?
         })
         .catch(function (err) {
             console.log(err);
@@ -180,6 +203,10 @@ var displayWeather = function (weatherData, searchTerm) {
     return;
 };
 
+
+// local storage?
+
+// keep the search button to stay on after initial search;
 
 // start screen loads local storage to show previous searches
 
