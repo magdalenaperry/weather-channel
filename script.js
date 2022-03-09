@@ -55,14 +55,20 @@ var displayHistory = [];
 var city = localStorage.getItem('city')
 if (city) {
     displayHistory = JSON.parse(city);
-    console.log(displayHistory);
-
-    for (let i = 0; i < displayHistory.length; i++) {
-        var cityLocalEl = document.createElement('li');
-        cityLocalEl.classList.add('col-11','list-group-item', 'ms-4');
+    
+    for (let i = 0; i < displayHistory.length-1; i++) {
+        (function(){ 
+        var cityLocalEl = document.createElement('button');
         cityLocalEl.textContent = displayHistory[i];
+        cityLocalEl.classList.add('col-11','list-group-item', 'ms-4');
+        var cityList = displayHistory[i];
         asideEl.appendChild(cityLocalEl);
-    }
+        
+        cityLocalEl.addEventListener('click', function() {
+            getCityInfoByName(cityLocalEl.innerText);
+        })
+    })();
+    };
 }
 
 // function to search information 
@@ -130,7 +136,6 @@ var displayWeather = function (weatherData, searchTerm) {
             return response.json();
         })
         .then(function (data) {
-
             // clears out previous search requests
             currentWeatherEl.innerHTML = '';
             fiveDayForecastEl.innerHTML = '';
@@ -212,13 +217,13 @@ var displayWeather = function (weatherData, searchTerm) {
                 card.appendChild(humidityEl);
                 humidityEl.textContent = 'Humidity: ' + humidity + '%';
             }
-            // icons? 
         })
         .catch(function (err) {
             console.log(err);
         });
     return;
 };
+
 
 // add event listener for search button
 searchBtn.addEventListener('click', searchHandler);

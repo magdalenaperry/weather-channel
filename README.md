@@ -1,6 +1,5 @@
 # Weather Dashboard
 
-
 [Weather] (https://magdalenaperry.github.io/weather-channel/)
 
 ## Table of Contents
