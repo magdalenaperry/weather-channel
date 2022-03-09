@@ -16,6 +16,10 @@ var asideEl = document.createElement('aside');
 asideEl.classList.add('col-3', 'h5', 'py-5');
 containerEl.appendChild(asideEl);
 
+// button area so that it isn't cleared 
+var buttonArea = document.createElement('div');
+asideEl.appendChild(buttonArea);
+
 // create main body
 var mainEl = document.createElement('main');
 mainEl.classList.add('col-8', 'margin-main');
@@ -34,7 +38,8 @@ mainEl.appendChild(fiveDayForecastEl);
 var searchEl = document.createElement('div');
 searchEl.textContent = 'Search for a City:';
 searchEl.classList.add('ms-4', 'mb-5');
-asideEl.appendChild(searchEl);
+// adds this element before the previous element
+asideEl.prepend(searchEl);
 
 var searchInput = document.createElement('input');
 searchInput.classList.add('col-12', 'mb-3', 'py-2');
@@ -51,31 +56,37 @@ searchEl.appendChild(searchBtn);
 var displayHistory = [];
 
 // local storage check for cities input with key 'city' in string
+
+
+// local storage in function so that they can be accessed to display information 
+var renderButtons = function (){
 var city = localStorage.getItem('city')
 if (city) {
     displayHistory = JSON.parse(city);
     // console.log(displayHistory);
-
+    buttonArea.innerHTML = '';
     for (let i = 0; i < displayHistory.length; i++) {
-        (function(){ 
-        var cityLocalEl = document.createElement('button');
+        (function () {
+            var cityLocalEl = document.createElement('button');
 
-        cityLocalEl.textContent = displayHistory[i];
-        cityLocalEl.classList.add('col-11','list-group-item', 'ms-4');
-        var cityList = displayHistory[i];
-        asideEl.appendChild(cityLocalEl);
-        
-        cityLocalEl.addEventListener('click', function() {
-            getCityInfoByName(cityLocalEl.innerText);
-        })
-    })();
+            cityLocalEl.textContent = displayHistory[i];
+            cityLocalEl.classList.add('col-11', 'list-group-item', 'ms-4');
+            var cityList = displayHistory[i];
+            buttonArea.appendChild(cityLocalEl);
+
+
+            cityLocalEl.addEventListener('click', function () {
+                getCityInfoByName(cityLocalEl.innerText);
+            })
+        })();
     };
+}
 }
 
 // function to search information 
 var searchHandler = function (event) {
     event.preventDefault();
-    // console.log('you clicked search button');
+
     // removes white space .trim()
     var citySearch = searchInput.value.trim();
     if (citySearch) {
@@ -93,6 +104,8 @@ var searchHandler = function (event) {
             displayHistory.push(citySearch);
         }
         localStorage.setItem('city', JSON.stringify(displayHistory));
+        // local storage is synchronous action function has to be after set item
+        renderButtons();
     } else {
         alert('Please enter a valid city.');
     }
@@ -173,7 +186,6 @@ var displayWeather = function (weatherData, searchTerm) {
             humidity.textContent = 'Humidity: ' + data.current.humidity + '%';
 
             // adds uvi index to current weather
-
             if (data.current.uvi >= 6) {
                  var uvi = document.createElement('button');
                  uvi.classList.add('btnUVI', 'py-2', 'mx-4', 'btn', 'btn-danger');
@@ -191,9 +203,7 @@ var displayWeather = function (weatherData, searchTerm) {
                 uvi.textContent = 'UVI: ' + data.current.uvi;
             }
 
-
             for (let i = 0; i < 5; i++) {
-
                 // date changed to momentum
                 var dtUnixFormatting = moment.unix(data.daily[i].dt).format('MMMM Do, YYYY');
                 var tempDay = data.daily[i].temp.day;
@@ -244,3 +254,4 @@ var displayWeather = function (weatherData, searchTerm) {
 
 // add event listener for search button
 searchBtn.addEventListener('click', searchHandler);
+renderButtons();
