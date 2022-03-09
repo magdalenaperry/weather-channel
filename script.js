@@ -38,13 +38,13 @@ asideEl.appendChild(searchEl);
 
 var searchInput = document.createElement('input');
 searchInput.classList.add('col-12', 'mb-3', 'py-2');
-searchInput.placeholder = 'City'
+searchInput.placeholder = 'City';
 searchEl.appendChild(searchInput);
 
 var searchBtn = document.createElement('button');
 searchBtn.textContent = 'Search';
-searchBtn.classList.add('col-12','btn', 'btn-lg', 'btn-outline-secondary', 'px-5')
-searchBtn.type = 'button'
+searchBtn.classList.add('col-12','btn', 'btn-lg', 'btn-outline-secondary', 'px-5');
+searchBtn.type = 'button';
 searchEl.appendChild(searchBtn);
 
 // local storage
@@ -111,13 +111,10 @@ var getCityInfoByName = function (city) {
             } else {
                 alert('Error: ' + response.statusText);
             }
-
-
         })
         .catch(function (error) {
             alert('Unable to find data for this city');
         });
-
 };
 
 // connect the city name API to lat/lon
@@ -176,10 +173,24 @@ var displayWeather = function (weatherData, searchTerm) {
             humidity.textContent = 'Humidity: ' + data.current.humidity + '%';
 
             // adds uvi index to current weather
-            var uvi = document.createElement('button');
-            uvi.classList.add('btnUVI', 'py-2', 'mx-4','btn', 'btn-warning');
-            currentWeatherEl.appendChild(uvi);
-            uvi.textContent = 'UVI: ' + data.current.uvi;
+
+            if (data.current.uvi >= 6) {
+                 var uvi = document.createElement('button');
+                 uvi.classList.add('btnUVI', 'py-2', 'mx-4', 'btn', 'btn-danger');
+                 currentWeatherEl.appendChild(uvi);
+                 uvi.textContent = 'UVI: ' + data.current.uvi;
+            } else if (data.current <= 2){
+                var uvi = document.createElement('button');
+                uvi.classList.add('btnUVI', 'py-2', 'mx-4', 'btn', 'btn-success');
+                currentWeatherEl.appendChild(uvi);
+                uvi.textContent = 'UVI: ' + data.current.uvi;
+            } else {
+                var uvi = document.createElement('button');
+                uvi.classList.add('btnUVI', 'py-2', 'mx-4', 'btn', 'btn-primary');
+                currentWeatherEl.appendChild(uvi);
+                uvi.textContent = 'UVI: ' + data.current.uvi;
+            }
+
 
             for (let i = 0; i < 5; i++) {
 
