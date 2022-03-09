@@ -102,7 +102,6 @@ var searchHandler = function (event) {
 var getCityInfoByName = function (city) {
     // var apiUrl =
     var cityRequestUrl = geoCodeWeatherUrl + city + '&appid=' + API;
-
     fetch(cityRequestUrl)
         .then(function (response) {
             if (response.ok) {
