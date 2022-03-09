@@ -3,7 +3,7 @@ containerEl.classList.add('row');
 
 var API = 'dbadba3b6a415a81ba40263bf08007ee';
 var openCallWeatherUrl = 'https://api.openweathermap.org/data/2.5/onecall?';
-var geoCodeWeatherUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=';
+var geoCodeWeatherUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=';
 
 // header create
 var header = document.createElement('header');
