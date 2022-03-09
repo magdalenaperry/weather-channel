@@ -1,4 +1,4 @@
-containerEl = document.querySelector('container')
+containerEl = document.querySelector('container');
 containerEl.classList.add('row');
 
 var API = 'dbadba3b6a415a81ba40263bf08007ee';
@@ -21,20 +21,19 @@ var mainEl = document.createElement('main');
 mainEl.classList.add('col-8', 'margin-main');
 containerEl.appendChild(mainEl);
 
-var currentWeatherEl = document.createElement('div')
+var currentWeatherEl = document.createElement('div');
 currentWeatherEl.classList.add('title', 'col-12','py-5', 'h2');
 mainEl.appendChild(currentWeatherEl);
 
-
 var fiveDayForecastEl = document.createElement('div');
 fiveDayForecastEl.classList.add('col-12', 'h3');
-fiveDayForecastEl.style.width = '8-rem;'
+fiveDayForecastEl.style.width = '8-rem;';
 mainEl.appendChild(fiveDayForecastEl);
 
 // search input and button
 var searchEl = document.createElement('div');
-searchEl.textContent = 'Search for a City:'
-searchEl.classList.add('ms-4', 'mb-5')
+searchEl.textContent = 'Search for a City:';
+searchEl.classList.add('ms-4', 'mb-5');
 asideEl.appendChild(searchEl);
 
 var searchInput = document.createElement('input');
@@ -55,10 +54,12 @@ var displayHistory = [];
 var city = localStorage.getItem('city')
 if (city) {
     displayHistory = JSON.parse(city);
-    
-    for (let i = 0; i < displayHistory.length-1; i++) {
+    // console.log(displayHistory);
+
+    for (let i = 0; i < displayHistory.length; i++) {
         (function(){ 
         var cityLocalEl = document.createElement('button');
+
         cityLocalEl.textContent = displayHistory[i];
         cityLocalEl.classList.add('col-11','list-group-item', 'ms-4');
         var cityList = displayHistory[i];
@@ -119,7 +120,8 @@ var getCityInfoByName = function (city) {
         });
 
 };
-// connect the city name API to lat/l
+
+// connect the city name API to lat/lon
 var displayWeather = function (weatherData, searchTerm) {
     if (weatherData.length === 0) {
         mainEl.textContent = 'No data found';
@@ -136,6 +138,7 @@ var displayWeather = function (weatherData, searchTerm) {
             return response.json();
         })
         .then(function (data) {
+
             // clears out previous search requests
             currentWeatherEl.innerHTML = '';
             fiveDayForecastEl.innerHTML = '';
@@ -146,6 +149,14 @@ var displayWeather = function (weatherData, searchTerm) {
             printCity.classList.add('test');
             currentWeatherEl.appendChild(printCity);
             printCity.textContent = 'weather for: ' + cityName;
+
+            // adds icon to current weather
+            var iconCurrEl = document.createElement('img');
+            iconCurrEl.src = 'https://openweathermap.org/img/wn/' + data.current.weather[0].icon + '@2x.png';
+            iconCurrEl.alt = data.current.weather[0].description;
+            iconCurrEl.title = data.current.weather[0].description;
+            iconCurrEl.classList.add('d-block');
+            currentWeatherEl.appendChild(iconCurrEl);
 
             // adds temperature to current weather
             var temp = document.createElement('p');
@@ -179,15 +190,12 @@ var displayWeather = function (weatherData, searchTerm) {
                 var windSpeed = data.daily[i].wind_speed;
                 var humidity = data.daily[i].humidity;
                 var weatherIcon = data.daily[i].weather[0].icon;
-                var weatherDescription = data.daily[i].weather[0].description
-                var iconSource = 'https://openweathermap.org/img/wn/' + weatherIcon + '@2x.png'
-                // console.log(data.daily[i].weather[0].icon)
-                // console.log(iconSource);
+                var weatherDescription = data.daily[i].weather[0].description;
+                var iconSource = 'https://openweathermap.org/img/wn/' + weatherIcon + '@2x.png';
 
                 var card = document.createElement('div');
-                card.classList.add('card-body', 'm-3')
+                card.classList.add('card-body', 'm-3');
                 fiveDayForecastEl.appendChild(card);
-                console.log(card)
 
                 var dateEl = document.createElement('h5');
                 dateEl.classList.add('card-text');
@@ -198,7 +206,7 @@ var displayWeather = function (weatherData, searchTerm) {
                 iconEl.src = iconSource;
                 iconEl.alt = weatherDescription;
                 iconEl.title = weatherDescription;
-                iconEl.classList.add('d-block')
+                iconEl.classList.add('d-block');
                 card.appendChild(iconEl);
 
 
@@ -223,7 +231,6 @@ var displayWeather = function (weatherData, searchTerm) {
         });
     return;
 };
-
 
 // add event listener for search button
 searchBtn.addEventListener('click', searchHandler);
