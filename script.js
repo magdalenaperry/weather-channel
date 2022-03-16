@@ -9,7 +9,7 @@ var geoCodeWeatherUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=';
 var header = document.createElement('header');
 header.classList.add('col-12', 'display-1', 'text-center', 'py-5', 'bg-secondary', 'text-light');
 containerEl.appendChild(header);
-header.textContent = "how is the weather up there?";
+header.textContent = "weather dashboard";
 
 // aside semantic div
 var asideEl = document.createElement('aside');
